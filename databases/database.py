@@ -46,6 +46,7 @@ class DatabaseConn:
             return True
         except Exception as e:
             raise sqlite3.DatabaseError(f"Connection failed: {str(e)}")
+        
     def close(self):
         if self.connection:
             self.connection.close()

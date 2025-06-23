@@ -73,9 +73,18 @@ from databases.database import DatabaseConn
 #     similarity = util.compare_sentences(pdfs_content1,pdfs_content2)
 #     print(f"Two pdfs are is {similarity}% similar")
 
-a = "True"
-b = bool(a)
-print(type(b))
+
+
+
+
+
+
+
+
+
+# a = "True"
+# b = bool(a)
+# print(type(b))
 
 
 
