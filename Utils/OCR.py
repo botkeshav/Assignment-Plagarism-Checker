@@ -3,21 +3,14 @@ import cv2
 import requests
 import PIL.Image
 import numpy as np
+import  json
 from google import genai
 from dotenv import load_dotenv
 from skimage.metrics import structural_similarity as ssim
 
-# ai_ans = ai_stuff("ss/webreq.pdf/0.png","is the text on this image is typed on a computer or written by human by their hands? just reply yes for handwritten text else no")
-# print(ai_ans)
-
-# print(pdf_get_text("handwritten.pdf"))
-# ai_ans = ai_stuff("test/gfg.png","is the text on this image is typed on a computer or written by human by their hands? just reply yes for handwritten text else no if the text is typed on computer")
-# print(ai_ans) 
-
-# ai_ans = ai_stuff("test/gfg-0.png","extract exact text from this image and don't add anything from you side")
-# print(ai_ans)
-
 load_dotenv()
+
+gemini_keys= json.loads(os.getenv('gemini_api_key'))  
 
 def ai_stuff(img:str, context:str) -> str:
     # # print(img)
@@ -83,11 +76,36 @@ def extract_text(img_path:str,context="What is this written on this image?")->st
     this function can also be used for other overloaded based on the context provided"""
 
     image = PIL.Image.open(img_path)
-    client = genai.Client(api_key= os.getenv('gemini_api_key'))
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=[context, image])
-    return response.text
+    global gemini_keys
+    if len(gemini_keys) == 0:
+            gemini_keys = json.loads(os.getenv('gemini_api_key'))
+        
+    key = gemini_keys[0]
+    
+    try:
+
+        client = genai.Client(api_key= key)
+        if len(gemini_keys) == 0:
+            gemini_keys = json.loads(os.getenv('gemini_api_key'))
+             
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[context, image])
+        return response.text
+    
+    except:
+
+        del gemini_keys[0]
+        print("switiching to another api")
+        if len(gemini_keys) == 0:
+            gemini_keys = json.loads(os.getenv('gemini_api_key'))
+        
+        key = gemini_keys[0]
+        client = genai.Client(api_key= key)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[context, image])
+        return response.text
 
    
 
