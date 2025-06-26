@@ -95,6 +95,43 @@ class DatabaseConn:
         cursor = self.connection.cursor()
         cursor.execute(f"DROP TABLE {table_name}")
 
+    def ishadwritten(self, table_name, pdf):
+        # Validate table name to prevent SQL injection
+        if not table_name.isidentifier():
+            raise ValueError("Invalid table name")
+        
+        cursor = self.connection.cursor()
+        query = f"""
+            SELECT handwritten
+            FROM "{table_name}"
+            WHERE pdf = ?
+        """
+        try:
+            cursor.execute(query, (pdf,))
+            result = cursor.fetchone()
+            return result[0] if result else None
+        except Exception as e:
+            raise Exception(f"Error getting extracted value: {e}")
+        
+    def isextracted(self, table_name, pdf):
+        # Validate table name to prevent SQL injection
+        if not table_name.isidentifier():
+            raise ValueError("Invalid table name")
+        
+        cursor = self.connection.cursor()
+        query = f"""
+            SELECT handwritten
+            FROM "{table_name}"
+            WHERE pdf = ?
+        """
+        try:
+            cursor.execute(query, (pdf,))
+            result = cursor.fetchone()
+            return result[0] if result else None
+        except Exception as e:
+            raise Exception(f"Error getting extracted value: {e}")
+
+
     def update_extracted(self,table_name,pdf,extracted=1):
         cursor = self.connection.cursor()
         update_query = f"""
