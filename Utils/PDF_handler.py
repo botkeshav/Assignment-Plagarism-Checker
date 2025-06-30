@@ -1,20 +1,20 @@
 import fitz
 import os
+import sys
 
-def pdf_get_text(file_name:str)->str:
+def pdf_to_text(file_name:str)->str:
     # Create a document object
     doc = fitz.open(filename=file_name)  # or fitz.Document(filename)
 
-    # print(doc.metadata)
-
+    content = ""
     # Get the page by their index
-    page = doc.load_page(1)
-    # or page = doc[0]   
+    for i in range(doc.page_count):
+        page = doc.load_page(i) # or page = doc[0] 
+        text = page.get_text() # read a Page
+        content = content + normalize_whitespace(text)
+     
 
-    # read a Page
-    text = page.get_text()
-    # print(text)
-    return text
+    return content
 
 
 
@@ -37,7 +37,6 @@ def pdftoImg(file_path:str)->str:
         pix = page.get_pixmap() 
         pix.save(f"{ss_folder}/{file_path}/{page.number}.png")
     
-    
     return f"ss/{file_path}"
 
 
@@ -51,9 +50,20 @@ def get_metadata(file_name):
 def normalize_whitespace(s):
     return ' '.join(s.split())
 
+def cache_pdf(content:str,pdf_name:str)->str:
+    """Cache the content of the pdf for the checking with other pdfs helps in
+    performance"""
+
+    with open(f"extracted_pdfs/{pdf_name}.txt","w") as f:
+        f.write(content)
+    
+    return f"extracted_pdfs/{pdf_name}.txt"
+
+
 
 if __name__ == "__main__":
-    pdf_get_text()
+    pdf_to_text()
     get_metadata()
     pdftoImg()
     normalize_whitespace()
+    cache_pdf()    
