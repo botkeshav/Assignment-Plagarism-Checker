@@ -1,4 +1,4 @@
-from Utils.PDF_handler import pdftoImg,pdf_get_text
+from Utils.PDF_handler import pdftoImg,pdf_to_text,cache_pdf
 from Utils.OCR import extract_text
 from Utils.utilities import util
 from Utils.handler import overall
@@ -17,7 +17,7 @@ db = DatabaseConn("PDFS.db")
 db.connect()
 db.create_table(classroom_id)
 
-print("table created connected")
+print("connected to db")
 
 for  pdfs in pdfs_folder:
     if os.path.exists(f"pdfs/{pdfs}"):
@@ -26,7 +26,6 @@ for  pdfs in pdfs_folder:
         print("No pdf found in the pdf path skipping ",pdfs)
 
 print("All pdfs Image extracted sucessfully")
-
 
 
 for folder_name in pdfs_folder:
@@ -45,3 +44,13 @@ for folder_name in pdfs_folder:
     
     print("Sleeping for 10 secs")
     sleep(10)
+
+for pdfs in pdfs_folder:
+    if not db.ishadwritten(classroom_id,pdfs):
+        pdf_content = pdf_to_text(f"pdfs/{pdfs}")
+        txt_file_loc = cache_pdf(pdf_content,pdfs)
+
+        print("Cached pdf for non-handwritten text ",pdfs)
+
+
+
