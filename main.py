@@ -1,7 +1,7 @@
 from Utils.PDF_handler import pdftoImg,pdf_to_text,cache_pdf
 from Utils.OCR import extract_text
 from Utils.utilities import util
-from Utils.handler import overall
+from Utils.handler import compare_pages,imgTotext
 from time import sleep
 import os
 from databases.database import DatabaseConn
@@ -52,5 +52,7 @@ for pdfs in pdfs_folder:
 
         print("Cached pdf for non-handwritten text ",pdfs)
 
-
-
+    else:
+        pdf_content = imgTotext(pdfs)
+        txt_file_loc = cache_pdf(pdf_content,pdfs)
+        print(pdfs," Saved to plain text")
