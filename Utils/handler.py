@@ -6,7 +6,7 @@ from Utils.OCR import img_compare,extract_text
 from Utils.utilities import util
 from Utils.PDF_handler import normalize_whitespace
 from time import sleep
-
+from typing import Optional
 
 def compare_pages(file_path1:str,file_path2:str):
     """
@@ -56,4 +56,25 @@ def imgTotext(pdf_name:str)->str:
     
     return content
 
-   
+def read_file(file_path:str)-> Optional[str]:   
+    
+    encodings = ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']
+    
+    for encoding in encodings:
+        try:
+            with open(file_path, 'r', encoding=encoding) as f:
+                return f.read()
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+        except Exception as e:
+            print(f"Error reading {file_path}: {e}")
+            return None
+    
+    print(f"Could not read {file_path} with any encoding")
+    return False
+
+
+if __name__ == "__main__":
+    read_file()
+    imgTotext()
+    img_compare()
