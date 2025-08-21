@@ -1,7 +1,7 @@
 import fitz
 import os
 import sys
-
+from pathlib import Path
 def pdf_to_text(file_name:str)->str:
     # Create a document object
     doc = fitz.open(filename=file_name)  # or fitz.Document(filename)
@@ -56,8 +56,7 @@ def normalize_whitespace(s):
 def cache_pdf(content:str,pdf_name:str)->str:
     """Cache the content of the pdf for the checking with other pdfs helps in
     performance"""
-    if ( not os.path.exits("extracted_pdfs")):
-         os.makedirs("extracted_pdfs")
+    Path("extracted_pdfs").mkdir(parents=True, exist_ok=True)
 
     with open(f"extracted_pdfs/{pdf_name}.txt","w",encoding="utf-8") as f:
         f.write(content)
