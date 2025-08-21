@@ -50,9 +50,14 @@ def get_metadata(file_name):
 def normalize_whitespace(s):
     return ' '.join(s.split())
 
+
+
+
 def cache_pdf(content:str,pdf_name:str)->str:
     """Cache the content of the pdf for the checking with other pdfs helps in
     performance"""
+    if ( not os.path.exits("extracted_pdfs")):
+         os.makedirs("extracted_pdfs")
 
     with open(f"extracted_pdfs/{pdf_name}.txt","w",encoding="utf-8") as f:
         f.write(content)
